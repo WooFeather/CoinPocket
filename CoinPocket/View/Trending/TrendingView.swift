@@ -17,17 +17,8 @@ struct TrendingView: View {
             }
             .navigationTitle("CoinPocket")
             .navigationBar { } trailing: {
-                Image(systemName: "person")
-                    .resizable()
-                    .frame(width: 36, height: 36)
-                    .background(.gray)
-                    .clipShape(Circle())
-                    .wrapToButton {
-                        // TODO: ProfileView로 이동
-                    }
-                    .buttonStyle(.plain)
+                ProfileImageView()
             }
-
         }
     }
     
@@ -83,9 +74,7 @@ struct TrendingView: View {
                 HStack {
                     Image(systemName: "star.fill")
                         .resizable()
-                        .frame(width: 40, height: 40)
-                        .background(.gray)
-                        .clipShape(Circle())
+                        .asCircleImage()
                     
                     VStack(alignment: .leading) {
                         Text("Bitcoin")
