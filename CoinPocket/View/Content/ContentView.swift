@@ -8,14 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var selectedTab: Tab = .trending
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            TrendingView()
+                .asTabModifier(.trending)
+            
+            SearchView()
+                .asTabModifier(.search)
+            
+            FavoriteView()
+                .asTabModifier(.favorite)
+            
+            ProfileView()
+                .asTabModifier(.profile)
         }
-        .padding()
+        .tint(.purple)
     }
 }
 
