@@ -16,7 +16,7 @@ struct SearchView: View {
             searchScrollView()
                 .navigationTitle("Search")
                 .navigationBar { } trailing: {
-                    ProfileImageView()
+                    ProfileImageButton()
                 }
         }
     }
@@ -48,13 +48,7 @@ struct SearchView: View {
             
             Spacer()
             
-            Image(systemName: "star")
-                .resizable()
-                .frame(width: 20, height: 20)
-                .tint(.purple)
-                .wrapToButton {
-                    // TODO: 즐겨찾기 로직
-                }
+            StarButton()
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)

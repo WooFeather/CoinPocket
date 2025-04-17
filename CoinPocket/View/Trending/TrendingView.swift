@@ -17,9 +17,10 @@ struct TrendingView: View {
             }
             .navigationTitle("CoinPocket")
             .navigationBar { } trailing: {
-                ProfileImageView()
+                ProfileImageButton()
             }
         }
+        .tint(.purple)
     }
     
     // MARK: - Function
@@ -33,7 +34,12 @@ struct TrendingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(0..<5) { item in
-                        favoriteRowView()
+                        NavigationLink {
+                            CoinDetailView()
+                        } label: {
+                            favoriteRowView()
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)
@@ -63,6 +69,7 @@ struct TrendingView: View {
                 }
             }
         }
+        .padding(.bottom)
     }
     
     private func favoriteRowView() -> some View {

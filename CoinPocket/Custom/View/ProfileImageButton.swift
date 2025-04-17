@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfileImageView: View {
+struct ProfileImageButton: View {
     var body: some View {
         Image(systemName: "person")
             .resizable()
