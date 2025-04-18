@@ -18,8 +18,8 @@ struct TrendingView: View {
                 rankingView(title: "Top 15 Coin", isCoin: true)
                 rankingView(title: "Top 7 NFT", isCoin: false)
             }
-            .task {
-                await viewModel.fetchTrendingData()
+            .onAppear {
+                viewModel.action(.fetchTrendingData)
             }
             .navigationTitle("CoinPocket")
             .navigationBar { } trailing: {
@@ -62,34 +62,38 @@ struct TrendingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: rows) {
-                    if isCoin {
-                        ForEach(Array(viewModel.coins.enumerated()), id: \.element.id) { index, item in
-                            NavigationLink {
-                                LazyView(DetailView())
-                            } label: {
+            if viewModel.output.isLoading {
+                ProgressView()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: rows) {
+                        if isCoin {
+                            ForEach(Array(viewModel.output.coins.enumerated()), id: \.element.id) { index, item in
+                                NavigationLink {
+                                    LazyView(DetailView())
+                                } label: {
+                                    rankingRowView(
+                                        rank: index + 1,
+                                        thumbImage: item.thumb,
+                                        name: item.name,
+                                        symbol: item.symbol,
+                                        price: item.price.asPriceString,
+                                        changeRate: item.changeRate
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        } else {
+                            ForEach(Array(viewModel.output.nfts.enumerated()), id: \.element.id) { index, item in
                                 rankingRowView(
                                     rank: index + 1,
                                     thumbImage: item.thumb,
                                     name: item.name,
                                     symbol: item.symbol,
-                                    price: item.price.asPriceString,
+                                    price: item.floorPrice,
                                     changeRate: item.changeRate
                                 )
                             }
-                            .buttonStyle(.plain)
-                        }
-                    } else {
-                        ForEach(Array(viewModel.nfts.enumerated()), id: \.element.id) { index, item in
-                            rankingRowView(
-                                rank: index + 1,
-                                thumbImage: item.thumb,
-                                name: item.name,
-                                symbol: item.symbol,
-                                price: item.floorPrice,
-                                changeRate: item.changeRate
-                            )
                         }
                     }
                 }
