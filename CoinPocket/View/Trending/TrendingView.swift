@@ -47,7 +47,7 @@ struct TrendingView: View {
         }
     }
     
-    // Coin과 NFT에 재사용
+    // Coin과 NFT에 재사용(NFT일 경우 Tap X)
     private func rankingView(title: String) -> some View {
         let rows = [
             GridItem(.fixed(68)),
