@@ -26,7 +26,12 @@ struct SearchView: View {
         ScrollView {
             VStack(spacing: 20) {
                 ForEach(0..<10) { item in
-                    searchRowView()
+                    NavigationLink {
+                        LazyView(DetailView())
+                    } label: {
+                        searchRowView()
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -52,6 +57,7 @@ struct SearchView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
+        .contentShape(Rectangle())
     }
 }
 

@@ -35,7 +35,7 @@ struct TrendingView: View {
                 HStack(spacing: 16) {
                     ForEach(0..<5) { item in
                         NavigationLink {
-                            CoinDetailView()
+                            LazyView(DetailView())
                         } label: {
                             favoriteRowView()
                         }
@@ -64,7 +64,12 @@ struct TrendingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: rows) {
                     ForEach(0..<9) { item in
-                        rankingRowView()
+                        NavigationLink {
+                            LazyView(DetailView())
+                        } label: {
+                            rankingRowView()
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -136,6 +141,7 @@ struct TrendingView: View {
         }
         .frame(width: 320)
         .padding(.horizontal)
+        .contentShape(Rectangle())
     }
 }
 

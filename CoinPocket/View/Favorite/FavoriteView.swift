@@ -28,7 +28,12 @@ struct FavoriteView: View {
         return ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(0..<10) { _ in
-                    favoriteRowView()
+                    NavigationLink {
+                        LazyView(DetailView())
+                    } label: {
+                        favoriteRowView()
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .padding()
