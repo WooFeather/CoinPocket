@@ -20,8 +20,10 @@ final class CoingeckoRepository: CoingeckoRepositoryType {
     func trending() async throws -> TrendingEntity {
         do {
             let result: TrendingDTO = try await networkManager.fetchData(CoingeckoRouter.trending)
+            print("result: \(result)")
             return result.toEntity()
         } catch {
+            print("error: \(error)")
             throw error
         }
     }

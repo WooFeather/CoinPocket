@@ -117,7 +117,7 @@ struct CategoryDTO: Codable, Identifiable {
     let name: String
     let marketCap1hChange: Double
     let slug: String
-    let coinsCount: Int
+    let coinsCount: String
     let data: CategoryDataDTO
 
     enum CodingKeys: String, CodingKey {

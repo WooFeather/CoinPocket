@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct TrendingView: View {
+    
+    @StateObject private var viewModel = TrendingViewModel()
+    
     var body: some View {
         NavigationWrapper {
             ScrollView(showsIndicators: false) {
                 favoriteView()
-                rankingView(title: "Top 15 Coin")
-                rankingView(title: "Top 7 NFT")
+                rankingView(title: "Top 15 Coin", isCoin: true)
+                rankingView(title: "Top 7 NFT", isCoin: false)
+            }
+            .task {
+                await viewModel.fetchTrendingData()
             }
             .navigationTitle("CoinPocket")
             .navigationBar { } trailing: {
@@ -48,12 +54,8 @@ struct TrendingView: View {
     }
     
     // Coin과 NFT에 재사용(NFT일 경우 Tap X)
-    private func rankingView(title: String) -> some View {
-        let rows = [
-            GridItem(.fixed(68)),
-            GridItem(.fixed(68)),
-            GridItem(.fixed(68))
-        ]
+    private func rankingView(title: String, isCoin: Bool) -> some View {
+        let rows = Array(repeating: GridItem(.fixed(68)), count: 3)
         
         return VStack {
             Text(title)
@@ -63,13 +65,31 @@ struct TrendingView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: rows) {
-                    ForEach(0..<9) { item in
-                        NavigationLink {
-                            LazyView(DetailView())
-                        } label: {
-                            rankingRowView()
+                    if isCoin {
+                        ForEach(viewModel.coins, id: \.id) { item in
+                            NavigationLink {
+                                LazyView(DetailView())
+                            } label: {
+                                rankingRowView(
+                                    thumbImage: item.thumb,
+                                    name: item.name,
+                                    symbol: item.symbol,
+                                    price: item.price,
+                                    changeRate: item.changeRate
+                                )
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
+                    } else {
+                        ForEach(viewModel.nfts, id: \.id) { item in
+                            rankingRowView(
+                                thumbImage: item.thumb,
+                                name: item.name,
+                                symbol: item.symbol,
+                                price: item.floorPrice,
+                                changeRate: item.changeRate
+                            )
+                        }
                     }
                 }
             }
@@ -109,30 +129,50 @@ struct TrendingView: View {
         .frame(width: 220, height: 150)
     }
     
-    private func rankingRowView() -> some View {
-        VStack {
+    // TODO: Coin하고 NFT 분기처리
+    private func rankingRowView(thumbImage: String, name: String, symbol: String, price: String, changeRate: String) -> some View {
+        let thumbImage = thumbImage
+        let name = name
+        let symbol = symbol
+        let price = price
+        let changeRate = changeRate
+        
+        let errorImage = Image(systemName: "exclamationmark.triangle")
+        
+        return VStack {
             HStack {
                 Text("1")
                     .font(.title3.bold())
                 
-                Image(systemName: "star.fill")
-                    .resizable()
-                    .frame(width: 30, height: 30)
+                AsyncImage(url: URL(string: thumbImage)) { data in
+                    switch data {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                    case .failure(_):
+                        errorImage
+                    @unknown default:
+                        errorImage
+                    }
+                }
+                .frame(width: 30, height: 30)
                 
                 VStack(alignment: .leading) {
-                    Text("Name")
+                    Text(name)
                         .font(.body.bold())
-                    Text("symbol")
+                    Text(symbol)
                         .font(.callout)
                 }
                 
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    Text("Price")
+                    Text(price)
                         .font(.body)
                     
-                    Text("priceChangeRate")
+                    Text(changeRate)
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
@@ -145,6 +185,6 @@ struct TrendingView: View {
     }
 }
 
-#Preview {
-    TrendingView()
-}
+//#Preview {
+//    TrendingView()
+//}
