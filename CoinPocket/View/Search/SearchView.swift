@@ -9,11 +9,15 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @State private var searchText: String = ""
+    @StateObject private var viewModel = SearchViewModel()
     
     var body: some View {
         NavigationWrapper {
             searchScrollView()
+                .searchable(text: $viewModel.input.query, placement: .navigationBarDrawer, prompt: "코인명을 입력하세요")
+                .onSubmit(of: .search) {
+                    viewModel.action(.search)
+                }
                 .navigationTitle("Search")
                 .navigationBar { } trailing: {
                     ProfileImageButton()
@@ -22,32 +26,55 @@ struct SearchView: View {
     }
     
     // MARK: - Function
+    @ViewBuilder
     private func searchScrollView() -> some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                ForEach(0..<10) { item in
-                    NavigationLink {
-                        LazyView(DetailView())
-                    } label: {
-                        searchRowView()
+        if viewModel.output.isLoading {
+            ProgressView()
+        } else if viewModel.output.results.isEmpty {
+            Text("검색 결과가 없습니다.")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            ScrollView {
+                VStack(spacing: 20) {
+                    ForEach(viewModel.output.results, id: \.id) { item in
+                        NavigationLink {
+                            LazyView(DetailView())
+                        } label: {
+                            searchRowView(entity: item)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
+                .padding(.vertical)
             }
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "코인명을 입력하세요")
     }
     
-    private func searchRowView() -> some View {
-        HStack {
-            Image(systemName: "star.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
+    private func searchRowView(entity: SearchCoinEntity) -> some View {
+        
+        let errorImage = Image(systemName: "exclamationmark.triangle")
+        
+        return HStack {
+            AsyncImage(url: URL(string: entity.thumb)) { data in
+                switch data {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                        .resizable()
+                case .failure(_):
+                    errorImage
+                @unknown default:
+                    errorImage
+                }
+            }
+            .frame(width: 30, height: 30)
             
             VStack(alignment: .leading) {
-                Text("Name")
+                Text(entity.name)
                     .font(.body.bold())
-                Text("symbol")
+                    .lineLimit(1)
+                Text(entity.symbol)
                     .font(.callout)
             }
             

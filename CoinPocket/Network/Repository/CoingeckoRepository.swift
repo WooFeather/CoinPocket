@@ -17,6 +17,8 @@ final class CoingeckoRepository: CoingeckoRepositoryType {
     static let shared: CoingeckoRepositoryType = CoingeckoRepository()
     private let networkManager: NetworkManagerType = NetworkManager.shared
     
+    private init() { }
+    
     func trending() async throws -> TrendingEntity {
         do {
             let result: TrendingDTO = try await networkManager.fetchData(CoingeckoRouter.trending)

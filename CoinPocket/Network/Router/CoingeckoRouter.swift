@@ -26,11 +26,11 @@ extension CoingeckoRouter: Router {
     var path: String {
         switch self {
         case .trending:
-            return "/search/trending"
+            return "search/trending"
         case .markets:
-            return "/coins/markets"
+            return "coins/markets"
         case .search:
-            return "/search"
+            return "search"
         }
     }
     
@@ -47,7 +47,7 @@ extension CoingeckoRouter: Router {
         case let .markets(ids):
             return [
                 "vs_currency": "krw",
-                "ids"        : ids.joined(separator: ",")
+                "ids" : ids.joined(separator: ",")
             ]
         case .trending:
             return [:]
@@ -56,7 +56,13 @@ extension CoingeckoRouter: Router {
         }
     }
     
+    // 파라미터 적용
     var encoding: (ParameterEncoding)? {
-        return nil
+        switch method {
+        case .get:
+            return URLEncoding.default
+        default:
+            return JSONEncoding.default
+        }
     }
 }

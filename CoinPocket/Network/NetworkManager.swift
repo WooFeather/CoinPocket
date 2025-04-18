@@ -22,6 +22,8 @@ final class NetworkManager: NetworkManagerType {
         let dataTask = AF.request(api)
             .validate(statusCode: 200..<300)
             .serializingData()
+        
+        print(api.urlRequest?.url ?? "")
 
         let result = await dataTask.result
 
