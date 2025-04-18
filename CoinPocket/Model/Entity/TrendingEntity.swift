@@ -18,8 +18,8 @@ struct TrendingCoinEntity {
     let symbol: String
     let marketCapRank: Int
     let thumb: String
-    let price: String
-    let changeRate: String
+    let price: Double
+    let changeRate: Double
 }
 
 struct TrendingNFTEntity {
@@ -28,7 +28,7 @@ struct TrendingNFTEntity {
     let symbol: String
     let thumb: String
     let floorPrice: String
-    let changeRate: String
+    let changeRate: Double
 }
 
 extension TrendingDTO {
@@ -41,10 +41,13 @@ extension TrendingDTO {
                 symbol: dto.symbol,
                 marketCapRank: dto.marketCapRank,
                 thumb: dto.thumb,
-                price: dto.data.price.formatted(),
-                changeRate: dto.data.priceChangePercentage24h["krw"]?.formatted() ?? ""
+                price: dto.data.price,
+                changeRate: dto.data.priceChangePercentage24h["krw"] ?? 0.0
             )
         }
+        
+        let sortedCoins = coinEntities
+            .sorted { $0.marketCapRank < $1.marketCapRank }
 
         let nftEntities = nfts.map { nftDTO in
             return TrendingNFTEntity(
@@ -53,11 +56,14 @@ extension TrendingDTO {
                 symbol: nftDTO.symbol,
                 thumb: nftDTO.thumb,
                 floorPrice: nftDTO.data.floorPrice,
-                changeRate: nftDTO.data.floorPriceInUSD24hPercentageChange
+                changeRate: Double(nftDTO.data.floorPriceInUSD24hPercentageChange) ?? 0.0
             )
         }
-
-        return TrendingEntity(coins: coinEntities, nfts: nftEntities)
+        
+        let sortedNFTs = nftEntities
+            .sorted { $0.changeRate > $1.changeRate }
+        
+        return TrendingEntity(coins: sortedCoins, nfts: sortedNFTs)
     }
 }
 
@@ -70,8 +76,8 @@ extension TrendingEntity {
                 symbol: "BTC",
                 marketCapRank: 1,
                 thumb: "https://coin-images.coingecko.com/coins/images/1/small/bitcoin.png",
-                price: "0.0952",
-                changeRate: "-3.85"
+                price: 0.0952,
+                changeRate: -3.85
             ),
             .init(
                 id: "ethereum",
@@ -79,8 +85,8 @@ extension TrendingEntity {
                 symbol: "ETH",
                 marketCapRank: 2,
                 thumb: "https://coin-images.coingecko.com/coins/images/279/small/ethereum.png",
-                price: "2188.03",
-                changeRate: "-1.05"
+                price: 2188.03,
+                changeRate: -1.05
             ),
             .init(
                 id: "solana",
@@ -88,8 +94,8 @@ extension TrendingEntity {
                 symbol: "SOL",
                 marketCapRank: 6,
                 thumb: "https://coin-images.coingecko.com/coins/images/4128/small/solana.png",
-                price: "0.0026",
-                changeRate: "-4.81"
+                price: 0.0026,
+                changeRate: -4.81
             ),
             .init(
                 id: "ondo-finance",
@@ -97,8 +103,8 @@ extension TrendingEntity {
                 symbol: "ONDO",
                 marketCapRank: 41,
                 thumb: "https://coin-images.coingecko.com/coins/images/26580/small/ONDO.png",
-                price: "0.9525",
-                changeRate: "-9.09"
+                price: 0.9525,
+                changeRate: -9.09
             ),
             .init(
                 id: "the-open-network",
@@ -106,8 +112,8 @@ extension TrendingEntity {
                 symbol: "TON",
                 marketCapRank: 25,
                 thumb: "https://coin-images.coingecko.com/coins/images/17980/small/photo_2024-09-10_17.09.00.jpeg",
-                price: "2.9868",
-                changeRate: "-2.51"
+                price: 2.9868,
+                changeRate: -2.51
             ),
             .init(
                 id: "zignaly",
@@ -115,8 +121,8 @@ extension TrendingEntity {
                 symbol: "ZIG",
                 marketCapRank: 356,
                 thumb: "https://coin-images.coingecko.com/coins/images/14796/small/zig.jpg",
-                price: "0.09525",
-                changeRate: "-2.48"
+                price: 0.09525,
+                changeRate: -2.48
             )
         ]
         
@@ -127,7 +133,7 @@ extension TrendingEntity {
                 symbol: "HYPIO",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/15671/standard/wealthy-hypio-babies.png",
                 floorPrice: "1.09 ETH",
-                changeRate: "21.54387552656127"
+                changeRate: 21.54387552656127
             ),
             .init(
                 id: "the-band-bears",
@@ -135,7 +141,7 @@ extension TrendingEntity {
                 symbol: "BANDB",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/3137/standard/the-band-bears.png",
                 floorPrice: "11.11 ETH",
-                changeRate: "17.14734634169384"
+                changeRate: 17.14734634169384
             ),
             .init(
                 id: "moonbirds",
@@ -143,7 +149,7 @@ extension TrendingEntity {
                 symbol: "MOONBIRD",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/349/standard/moobirds.webp",
                 floorPrice: "0.54 ETH",
-                changeRate: "7.098650935295411"
+                changeRate: 7.098650935295411
             ),
             .init(
                 id: "creepz-genesis",
@@ -151,7 +157,7 @@ extension TrendingEntity {
                 symbol: "CBC",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/1326/standard/creepz-genesis.png",
                 floorPrice: "2.09 ETH",
-                changeRate: "3.885820610207682"
+                changeRate: 3.885820610207682
             ),
             .init(
                 id: "claynosaurz",
@@ -159,7 +165,7 @@ extension TrendingEntity {
                 symbol: "CLAYNOSAURZ",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/2446/standard/claynosaurz.gif",
                 floorPrice: "16.50 SOL",
-                changeRate: "2.594313916820804"
+                changeRate: 2.594313916820804
             ),
             .init(
                 id: "celestine-sloth-society",
@@ -167,7 +173,7 @@ extension TrendingEntity {
                 symbol: "MFER",
                 thumb: "https://coin-images.coingecko.com/nft_contracts/images/312/standard/mfers.png",
                 floorPrice: "0.47 ETH",
-                changeRate: "21.54387552656127"
+                changeRate: 21.54387552656127
             )
         ]
         

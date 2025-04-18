@@ -14,7 +14,7 @@ struct TrendingView: View {
     var body: some View {
         NavigationWrapper {
             ScrollView(showsIndicators: false) {
-                favoriteView()
+                favoriteView() // TODO: 즐겨찾기가 2개 이상이면 표시
                 rankingView(title: "Top 15 Coin", isCoin: true)
                 rankingView(title: "Top 7 NFT", isCoin: false)
             }
@@ -53,7 +53,6 @@ struct TrendingView: View {
         }
     }
     
-    // Coin과 NFT에 재사용(NFT일 경우 Tap X)
     private func rankingView(title: String, isCoin: Bool) -> some View {
         let rows = Array(repeating: GridItem(.fixed(68)), count: 3)
         
@@ -66,23 +65,25 @@ struct TrendingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: rows) {
                     if isCoin {
-                        ForEach(viewModel.coins, id: \.id) { item in
+                        ForEach(Array(viewModel.coins.enumerated()), id: \.element.id) { index, item in
                             NavigationLink {
                                 LazyView(DetailView())
                             } label: {
                                 rankingRowView(
+                                    rank: index + 1,
                                     thumbImage: item.thumb,
                                     name: item.name,
                                     symbol: item.symbol,
-                                    price: item.price,
+                                    price: item.price.asPriceString,
                                     changeRate: item.changeRate
                                 )
                             }
                             .buttonStyle(.plain)
                         }
                     } else {
-                        ForEach(viewModel.nfts, id: \.id) { item in
+                        ForEach(Array(viewModel.nfts.enumerated()), id: \.element.id) { index, item in
                             rankingRowView(
+                                rank: index + 1,
                                 thumbImage: item.thumb,
                                 name: item.name,
                                 symbol: item.symbol,
@@ -129,19 +130,12 @@ struct TrendingView: View {
         .frame(width: 220, height: 150)
     }
     
-    // TODO: Coin하고 NFT 분기처리
-    private func rankingRowView(thumbImage: String, name: String, symbol: String, price: String, changeRate: String) -> some View {
-        let thumbImage = thumbImage
-        let name = name
-        let symbol = symbol
-        let price = price
-        let changeRate = changeRate
-        
+    private func rankingRowView(rank: Int, thumbImage: String, name: String, symbol: String, price: String, changeRate: Double) -> some View {
         let errorImage = Image(systemName: "exclamationmark.triangle")
         
         return VStack {
             HStack {
-                Text("1")
+                Text("\(rank)")
                     .font(.title3.bold())
                 
                 AsyncImage(url: URL(string: thumbImage)) { data in
@@ -172,9 +166,9 @@ struct TrendingView: View {
                     Text(price)
                         .font(.body)
                     
-                    Text(changeRate)
+                    Text(changeRate.asChangeRateString)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(changeRate.percentColor)
                 }
             }
             Divider()

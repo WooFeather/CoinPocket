@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 final class TrendingViewModel: ObservableObject {
     @Published var coins: [TrendingCoinEntity] = []
     @Published var nfts: [TrendingNFTEntity] = []
@@ -14,8 +15,9 @@ final class TrendingViewModel: ObservableObject {
     
     func fetchTrendingData() async {
         do {
-            coins = try await repository.trending().coins
-            nfts = try await repository.trending().nfts
+            let response = try await repository.trending()
+            coins = response.coins
+            nfts = response.nfts
         } catch {
             coins = []
             nfts = []
