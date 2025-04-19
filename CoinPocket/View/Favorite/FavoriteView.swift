@@ -5,9 +5,17 @@
 //  Created by 조우현 on 4/17/25.
 //
 
+/*
+ 1. 뷰가 보여질때 realm을 fetch하는 트리거 전달
+ 2. viewModel에서 나온 네트워크 결과 배열을 favoriteScrollView에 보여줌
+ */
+
 import SwiftUI
 
 struct FavoriteView: View {
+    
+    @StateObject private var viewModel = FavoriteViewModel()
+    
     var body: some View {
         NavigationWrapper {
             favoriteScrollView()
@@ -16,22 +24,22 @@ struct FavoriteView: View {
                     ProfileImageButton()
                 }
         }
+        .onAppear {
+            viewModel.action(.fetchData)
+        }
     }
     
     // MARK: - Function
     private func favoriteScrollView() -> some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16)
-        ]
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
         
         return ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(0..<10) { _ in
+                ForEach(viewModel.output.favorites, id: \.id) { item in
                     NavigationLink {
-//                        LazyView(DetailView(coinId: <#String#>))
+                        LazyView(DetailView(coinId: item.id))
                     } label: {
-                        favoriteRowView()
+                        favoriteRowView(entity: item)
                     }
                     .buttonStyle(.plain)
                 }
@@ -40,38 +48,51 @@ struct FavoriteView: View {
         }
     }
     
-    private func favoriteRowView() -> some View {
-        ZStack(alignment: .topLeading) {
+    private func favoriteRowView(entity: MarketEntity) -> some View {
+        let errorImage = Image(systemName: "exclamationmark.triangle")
+        
+        return ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 18)
                 .fill(.white)
                 .shadow(radius: 1)
             
             VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .asCircleImage()
+                    AsyncImage(url: URL(string: entity.image)) { data in
+                        switch data {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                        case .failure(_):
+                            errorImage
+                        @unknown default:
+                            errorImage
+                        }
+                    }
+                    .frame(width: 30, height: 30)
                     
                     VStack(alignment: .leading) {
-                        Text("Bitcoin")
+                        Text(entity.name)
                             .font(.headline)
-                        Text("BTC")
-                            .font(.caption)
+                        Text(entity.symbol)
+                            .font(.body)
                             .foregroundStyle(.gray)
                     }
                 }
                 Spacer()
                 
-                Text("CurrentPrice")
+                Text(entity.currentPrice.asWonString)
                     .font(.body.bold())
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                Text("+0.64%")
+                Text(entity.priceChangePercentage24h?.asChangeRateString ?? "-1")
                     .font(.footnote.bold())
-                    .foregroundStyle(.red)
+                    .foregroundStyle(entity.priceChangePercentage24h?.percentColor ?? .black)
                     .padding(4)
                     .overlay {
                         RoundedRectangle(cornerRadius: 6)
-                            .fill(.red.opacity(0.2))
+                            .fill(entity.priceChangePercentage24h?.percentColor.opacity(0.2) ?? .black.opacity(0.2))
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }

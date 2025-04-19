@@ -24,7 +24,7 @@ struct SearchCategoryDTO: Codable {
 // MARK: - Coin
 struct SearchCoinDTO: Codable {
     let id, name, apiSymbol, symbol: String
-    let marketCapRank: Int
+    let marketCapRank: Int?
     let thumb, large: String
 
     enum CodingKeys: String, CodingKey {
