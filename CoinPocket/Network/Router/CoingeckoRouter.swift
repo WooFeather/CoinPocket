@@ -47,6 +47,7 @@ extension CoingeckoRouter: Router {
         case let .markets(ids):
             return [
                 "vs_currency": "krw",
+                "sparkline": "true",
                 "ids" : ids.joined(separator: ",")
             ]
         case .trending:

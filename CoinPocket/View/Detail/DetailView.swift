@@ -15,9 +15,13 @@ struct DetailView: View {
     
     var body: some View {
         ScrollView {
-            coinInfoView(entity: viewModel.output.coinDetail)
-            priceInfoView(entity: viewModel.output.coinDetail)
-            chartView(entity: viewModel.output.coinDetail)
+            if viewModel.output.isLoading {
+                ProgressView()
+            } else {
+                coinInfoView(entity: viewModel.output.coinDetail)
+                priceInfoView(entity: viewModel.output.coinDetail)
+                chartView(entity: viewModel.output.coinDetail)
+            }
         }
         .onAppear {
             viewModel.action(.getCoinId(coinId))
@@ -26,7 +30,6 @@ struct DetailView: View {
             StarButton()
         }
     }
-    
     
     // MARK: - Function
     private func coinInfoView(entity: MarketEntity) -> some View {
@@ -154,6 +157,6 @@ struct SparklineChart: View {
     }
 }
 
-#Preview {
-    DetailView(coinId: "Bitcoin Cash")
-}
+//#Preview {
+//    DetailView(coinId: "Bitcoin Cash")
+//}

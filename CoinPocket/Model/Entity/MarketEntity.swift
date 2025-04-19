@@ -27,23 +27,21 @@ struct SparklineData {
 }
 
 extension MarketDTO {
-    func toEntity() -> [MarketEntity] {
-        [
-            MarketEntity(
-                id: self.id,
-                name: self.name,
-                symbol: self.symbol,
-                image: self.image,
-                currentPrice: self.currentPrice,
-                high24h: self.high24h,
-                low24h: self.low24h,
-                priceChangePercentage24h: self.priceChangePercentage24h,
-                ath: self.ath,
-                atl: self.atl,
-                lastUpdated: self.lastUpdated,
-                sparklineIn7d: self.sparklineIn7d.map { SparklineData(price: $0.price) }
-            )
-        ]
+    func toEntity() -> MarketEntity {
+        MarketEntity(
+            id: self.id,
+            name: self.name,
+            symbol: self.symbol,
+            image: self.image,
+            currentPrice: self.currentPrice,
+            high24h: self.high24h,
+            low24h: self.low24h,
+            priceChangePercentage24h: self.priceChangePercentage24h,
+            ath: self.ath,
+            atl: self.atl,
+            lastUpdated: self.lastUpdated,
+            sparklineIn7d: self.sparklineIn7d.map { SparklineData(price: $0.price) }
+        )
     }
 }
 

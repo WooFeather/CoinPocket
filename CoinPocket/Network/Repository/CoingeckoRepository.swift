@@ -30,13 +30,10 @@ final class CoingeckoRepository: CoingeckoRepositoryType {
     }
     
     func markets(ids: [String]) async throws -> [MarketEntity] {
-        do {
-            let result: MarketDTO = try await networkManager.fetchData(CoingeckoRouter.markets(ids: ids))
-            return result.toEntity()
-        } catch {
-            print("error: \(error)")
-            throw error
-        }
+        let dtos: [MarketDTO] = try await networkManager.fetchData(
+            CoingeckoRouter.markets(ids: ids)
+        )
+        return dtos.map { $0.toEntity() }
     }
     
     func search(_ query: String) async throws -> SearchEntity {

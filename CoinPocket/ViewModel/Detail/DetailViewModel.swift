@@ -58,6 +58,7 @@ extension DetailViewModel {
 }
 
 // MARK: - Function
+@MainActor
 extension DetailViewModel {
     private func fetchCoinDetail(id: String) async {
         output.isLoading = true
