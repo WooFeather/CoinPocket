@@ -77,7 +77,7 @@ struct SearchView: View {
             .frame(width: 30, height: 30)
             
             VStack(alignment: .leading) {
-                Text(entity.name)
+                highlightedText(entity.name, query: viewModel.input.query)
                     .font(.body.bold())
                     .lineLimit(1)
                 Text(entity.symbol)
@@ -101,6 +101,17 @@ struct SearchView: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
         .contentShape(Rectangle())
+    }
+    
+    private func highlightedText(_ text: String, query: String) -> Text {
+        guard !query.isEmpty else { return Text(text) }
+        
+        var attr = AttributedString(text)
+        if let range = attr.range(of: query, options: .caseInsensitive) {
+            attr[range].foregroundColor = .purple
+            attr[range].font = .body.bold()
+        }
+        return Text(attr)
     }
 }
 

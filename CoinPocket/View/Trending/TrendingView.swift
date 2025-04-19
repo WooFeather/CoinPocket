@@ -14,7 +14,7 @@ struct TrendingView: View {
     var body: some View {
         NavigationWrapper {
             ScrollView(showsIndicators: false) {
-                favoriteView() // TODO: 즐겨찾기가 2개 이상이면 표시
+                favoriteView()
                 rankingView(title: "Top 15 Coin", isCoin: true)
                 rankingView(title: "Top 7 NFT", isCoin: false)
             }
