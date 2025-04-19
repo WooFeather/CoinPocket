@@ -25,7 +25,7 @@ struct FavoriteView: View {
                 }
         }
         .onAppear {
-            viewModel.action(.fetchData)
+            viewModel.action(.fetchFavoriteData)
         }
     }
     

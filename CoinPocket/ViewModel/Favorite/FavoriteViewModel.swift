@@ -51,12 +51,12 @@ final class FavoriteViewModel: ViewModelType {
 // MARK: - Action
 extension FavoriteViewModel {
     enum Action {
-        case fetchData
+        case fetchFavoriteData
     }
     
     func action(_ action: Action) {
         switch action {
-        case .fetchData:
+        case .fetchFavoriteData:
             input.refresh.send(())
         }
     }

@@ -20,6 +20,7 @@ struct TrendingView: View {
             }
             .onAppear {
                 viewModel.action(.fetchTrendingData)
+                viewModel.action(.fetchFavoriteData)
             }
             .navigationTitle("CoinPocket")
             .navigationBar { } trailing: {
@@ -37,18 +38,22 @@ struct TrendingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(0..<5) { item in
-                        NavigationLink {
-                            // LazyView(DetailView())
-                        } label: {
-                            favoriteRowView()
+            if viewModel.output.isFavoriteLoading {
+                ProgressView()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(viewModel.output.favorites, id: \.id) { item in
+                            NavigationLink {
+                                LazyView(DetailView(coinId: item.id))
+                            } label: {
+                                favoriteRowView(entity: item)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
             }
         }
     }
@@ -62,7 +67,7 @@ struct TrendingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             
-            if viewModel.output.isLoading {
+            if viewModel.output.isRankingLoading {
                 ProgressView()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -102,30 +107,43 @@ struct TrendingView: View {
         .padding(.bottom)
     }
     
-    private func favoriteRowView() -> some View {
-        ZStack(alignment: .topLeading) {
+    private func favoriteRowView(entity: MarketEntity) -> some View {
+        let errorImage = Image(systemName: "exclamationmark.triangle")
+        
+        return ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 18)
                 .fill(.gray.opacity(0.2))
             
             VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .asCircleImage()
+                    AsyncImage(url: URL(string: entity.image)) { data in
+                        switch data {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                        case .failure(_):
+                            errorImage
+                        @unknown default:
+                            errorImage
+                        }
+                    }
+                    .frame(width: 30, height: 30)
                     
                     VStack(alignment: .leading) {
-                        Text("Bitcoin")
+                        Text(entity.name)
                             .font(.headline)
-                        Text("BTC")
+                        Text(entity.symbol)
                             .font(.caption)
                             .foregroundStyle(.gray)
                     }
                 }
                 Spacer()
                 
-                Text("CurrentPrice")
+                Text(entity.currentPrice.asWonString)
                     .font(.body.bold())
-                Text("priceChangeRate")
+                Text(entity.priceChangePercentage24h?.asChangeRateString ?? "-1")
                     .font(.callout.bold())
                     .foregroundStyle(.red)
             }
