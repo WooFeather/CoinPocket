@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		79F479162DB22A8500C14FC1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 79F479152DB22A8500C14FC1 /* Alamofire */; };
+		79F47A572DB39A7F00C14FC1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 79F47A562DB39A7F00C14FC1 /* RealmSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79F47A572DB39A7F00C14FC1 /* RealmSwift in Frameworks */,
 				79F479162DB22A8500C14FC1 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = CoinPocket;
 			packageProductDependencies = (
 				79F479152DB22A8500C14FC1 /* Alamofire */,
+				79F47A562DB39A7F00C14FC1 /* RealmSwift */,
 			);
 			productName = CoinPocket;
 			productReference = 79852B672DB0EF0D00C7A97F /* CoinPocket.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				79F479142DB22A8500C14FC1 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				79F47A552DB39A7F00C14FC1 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 79852B682DB0EF0D00C7A97F /* Products */;
@@ -355,6 +359,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		79F47A552DB39A7F00C14FC1 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 20.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -362,6 +374,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 79F479142DB22A8500C14FC1 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		79F47A562DB39A7F00C14FC1 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79F47A552DB39A7F00C14FC1 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

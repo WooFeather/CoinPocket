@@ -80,7 +80,7 @@ struct SearchView: View {
             
             Spacer()
             
-            StarButton()
+            StarButton(coinId: entity.id)
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)

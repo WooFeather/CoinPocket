@@ -27,7 +27,7 @@ struct DetailView: View {
             viewModel.action(.getCoinId(coinId))
         }
         .navigationBar { } trailing: {
-            StarButton()
+            StarButton(coinId: coinId)
         }
     }
     
