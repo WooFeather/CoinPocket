@@ -18,11 +18,19 @@ struct FavoriteView: View {
     
     var body: some View {
         NavigationWrapper {
-            favoriteScrollView()
-                .navigationTitle("Favorite")
-                .navigationBar { } trailing: {
-                    ProfileImageButton()
-                }
+            if viewModel.output.favorites.isEmpty {
+                emptyFavoriteView()
+                    .navigationTitle("Favorite")
+                    .navigationBar { } trailing: {
+                        ProfileImageButton()
+                    }
+            } else {
+                favoriteScrollView()
+                    .navigationTitle("Favorite")
+                    .navigationBar { } trailing: {
+                        ProfileImageButton()
+                    }
+            }
         }
         .onAppear {
             viewModel.action(.fetchFavoriteData)
@@ -30,6 +38,12 @@ struct FavoriteView: View {
     }
     
     // MARK: - Function
+    private func emptyFavoriteView() -> some View {
+        Text("즐겨찾기 한 코인이 없습니다.")
+            .font(.headline)
+            .foregroundColor(.secondary)
+    }
+    
     private func favoriteScrollView() -> some View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
         

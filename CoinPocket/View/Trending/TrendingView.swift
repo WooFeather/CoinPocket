@@ -31,28 +31,34 @@ struct TrendingView: View {
     }
     
     // MARK: - Function
+    @ViewBuilder
     private func favoriteView() -> some View {
-        VStack {
-            Text("My Favorite")
-                .font(.title2.bold())
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+        // 2개 미만 + 아직 로딩 중이 아닐 때 → 아무것도 안 그린다
+        if viewModel.output.isFavoriteLoading ||
+            viewModel.output.favorites.count >= 2 {
             
-            if viewModel.output.isFavoriteLoading {
-                ProgressView()
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 16) {
-                        ForEach(viewModel.output.favorites, id: \.id) { item in
-                            NavigationLink {
-                                LazyView(DetailView(coinId: item.id))
-                            } label: {
-                                favoriteRowView(entity: item)
+            VStack {
+                Text("My Favorite")
+                    .font(.title2.bold())
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                
+                if viewModel.output.isFavoriteLoading {
+                    ProgressView()
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.output.favorites, id: \.id) { item in
+                                NavigationLink {
+                                    LazyView(DetailView(coinId: item.id))
+                                } label: {
+                                    favoriteRowView(entity: item)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                 }
             }
         }
