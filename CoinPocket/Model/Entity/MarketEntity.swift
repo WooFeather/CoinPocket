@@ -47,7 +47,16 @@ extension MarketDTO {
     }
 }
 
+struct SparklinePoint: Identifiable {
+    let id: Int // index
+    let price: Double // value
+}
+
 extension MarketEntity {
+    var sparklinePoints: [SparklinePoint] {
+        sparklineIn7d?.price.enumerated().map { SparklinePoint(id: $0, price: $1) } ?? []
+    }
+    
     static var mockData: [MarketEntity] {
         [
             MarketEntity(

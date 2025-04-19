@@ -58,7 +58,7 @@ struct DetailView: View {
             
             HStack {
                 Text(entity.priceChangePercentage24h?.asChangeRateString ?? "-1")
-                    .foregroundStyle(.red)
+                    .foregroundStyle(entity.priceChangePercentage24h?.percentColor ?? .black)
                 Text("Today")
                     .foregroundStyle(.gray)
             }
@@ -95,13 +95,62 @@ struct DetailView: View {
     
     private func chartView(entity: MarketEntity) -> some View {
         LazyVStack(alignment: .trailing) {
-            // Chart
+            SparklineChart(entity: entity)
             
             Text(entity.lastUpdated.toDate?.toString(dateFormat: "M/d HH:mm:ss 업데이트") ?? "")
                 .font(.caption)
                 .foregroundStyle(.gray)
+                .padding()
         }
-        .padding()
+    }
+}
+
+// MARK: - ChartView
+struct SparklineChart: View {
+    let entity: MarketEntity
+    private let purple = Color.purple
+    
+    var body: some View {
+        Chart {
+            ForEach(entity.sparklinePoints) { point in
+                AreaMark(
+                    x: .value("Index", point.id),
+                    y: .value("Price", point.price)
+                )
+                .interpolationMethod(.cardinal)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            purple.opacity(0.4),
+                            purple.opacity(0.6),
+                            purple
+                        ],
+                        startPoint: .bottom,
+                        endPoint: .top
+                    )
+                )
+            }
+            
+            ForEach(entity.sparklinePoints) { point in
+                LineMark(
+                    x: .value("Index", point.id),
+                    y: .value("Price", point.price)
+                )
+                .interpolationMethod(.catmullRom)
+                .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
+                .foregroundStyle(purple)
+            }
+        }
+        .chartXAxis(.hidden)
+        .chartYAxis(.hidden)
+        .frame(height: 300)
+        .mask(
+            LinearGradient(
+                colors: [.black, .black, .clear],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 }
 
