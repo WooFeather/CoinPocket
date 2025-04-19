@@ -8,6 +8,11 @@
 import SwiftUI
 
 extension Double {
+    var asWonString: String {
+        let intNum = Int(self)
+        return "￦" + intNum.formatted()
+    }
+    
     var asPriceString: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency

@@ -29,7 +29,7 @@ struct FavoriteView: View {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(0..<10) { _ in
                     NavigationLink {
-                        LazyView(DetailView())
+//                        LazyView(DetailView(coinId: <#String#>))
                     } label: {
                         favoriteRowView()
                     }

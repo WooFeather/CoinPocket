@@ -9,38 +9,55 @@ import SwiftUI
 import Charts
 
 struct DetailView: View {
+    @StateObject private var viewModel = DetailViewModel()
+    
+    var coinId: String
+    
     var body: some View {
         ScrollView {
-            coinInfoView()
-            priceInfoView()
-            chartView()
+            coinInfoView(entity: viewModel.output.coinDetail)
+            priceInfoView(entity: viewModel.output.coinDetail)
+            chartView(entity: viewModel.output.coinDetail)
+        }
+        .onAppear {
+            viewModel.action(.getCoinId(coinId))
         }
         .navigationBar { } trailing: {
             StarButton()
         }
     }
     
-    init() {
-        print("DetailView init")
-    }
     
     // MARK: - Function
-    private func coinInfoView() -> some View {
-        LazyVStack(alignment: .leading) {
+    private func coinInfoView(entity: MarketEntity) -> some View {
+        let errorImage = Image(systemName: "exclamationmark.triangle")
+        
+        return LazyVStack(alignment: .leading) {
             HStack {
-                Image(systemName: "star.fill")
-                    .resizable()
-                    .frame(width: 30, height: 30)
+                AsyncImage(url: URL(string: entity.image)) { data in
+                    switch data {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                    case .failure(_):
+                        errorImage
+                    @unknown default:
+                        errorImage
+                    }
+                }
+                .frame(width: 30, height: 30)
                 
-                Text("CoinName")
+                Text(entity.name)
                     .font(.largeTitle.bold())
             }
             
-            Text("99,999,999")
+            Text(entity.currentPrice.asWonString)
                 .font(.largeTitle.bold())
             
             HStack {
-                Text("+9.99%")
+                Text(entity.priceChangePercentage24h?.asChangeRateString ?? "-1")
                     .foregroundStyle(.red)
                 Text("Today")
                     .foregroundStyle(.gray)
@@ -49,16 +66,16 @@ struct DetailView: View {
         .padding()
     }
     
-    private func priceInfoView() -> some View {
+    private func priceInfoView(entity: MarketEntity) -> some View {
         HStack {
-            VStack(spacing: 20) {
-                priceView("고가", titleColor: .red, price: "99,999,999")
-                priceView("신고점", titleColor: .red, price: "99,999,999")
+            VStack(alignment: .leading, spacing: 20) {
+                priceView("고가", titleColor: .red, price: entity.high24h?.asWonString ?? "")
+                priceView("신고점", titleColor: .red, price: entity.ath.asWonString)
             }
             Spacer()
-            VStack(spacing: 20) {
-                priceView("저가", titleColor: .blue, price: "99,999,999")
-                priceView("신저점", titleColor: .blue, price: "99,999,999")
+            VStack(alignment: .leading, spacing: 20) {
+                priceView("저가", titleColor: .blue, price: entity.low24h?.asWonString ?? "")
+                priceView("신저점", titleColor: .blue, price: entity.atl.asWonString)
             }
             Spacer()
         }
@@ -76,10 +93,11 @@ struct DetailView: View {
         }
     }
     
-    private func chartView() -> some View {
+    private func chartView(entity: MarketEntity) -> some View {
         LazyVStack(alignment: .trailing) {
             // Chart
-            Text("2/21 88:88:88 업데이트")
+            
+            Text(entity.lastUpdated.toDate?.toString(dateFormat: "M/d HH:mm:ss 업데이트") ?? "")
                 .font(.caption)
                 .foregroundStyle(.gray)
         }
@@ -88,5 +106,5 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView()
+    DetailView(coinId: "Bitcoin Cash")
 }

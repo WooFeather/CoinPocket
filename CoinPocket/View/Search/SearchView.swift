@@ -36,9 +36,9 @@ struct SearchView: View {
         } else {
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(viewModel.output.results, id: \.id) { item in
+                    ForEach(viewModel.output.results, id: \.id) { item in // TODO: 검색어랑 일치하는 Text 하이라이트 처리
                         NavigationLink {
-                            LazyView(DetailView())
+                            LazyView(DetailView(coinId: item.id))
                         } label: {
                             searchRowView(entity: item)
                         }

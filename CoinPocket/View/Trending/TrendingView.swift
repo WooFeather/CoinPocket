@@ -41,7 +41,7 @@ struct TrendingView: View {
                 HStack(spacing: 16) {
                     ForEach(0..<5) { item in
                         NavigationLink {
-                            LazyView(DetailView())
+                            // LazyView(DetailView())
                         } label: {
                             favoriteRowView()
                         }
@@ -70,7 +70,7 @@ struct TrendingView: View {
                         if isCoin {
                             ForEach(Array(viewModel.output.coins.enumerated()), id: \.element.id) { index, item in
                                 NavigationLink {
-                                    LazyView(DetailView())
+                                    LazyView(DetailView(coinId: item.id))
                                 } label: {
                                     rankingRowView(
                                         rank: index + 1,

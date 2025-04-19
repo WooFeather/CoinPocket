@@ -17,9 +17,7 @@ struct MarketEntity {
     let low24h: Double? // 24시간 저가
     let priceChangePercentage24h: Double? // 24시간 변동폭
     let ath: Double // 사상 최고가(신고점)
-    let athDate: String // 신고점 일자
     let atl: Double // 사상 최저가(신저점)
-    let atlDate: String // 신저점 일자
     let lastUpdated: String // 최근 업데이트 시간
     let sparklineIn7d: SparklineData?
 }
@@ -41,12 +39,9 @@ extension MarketDTO {
                 low24h: self.low24h,
                 priceChangePercentage24h: self.priceChangePercentage24h,
                 ath: self.ath,
-                athDate: self.athDate,
                 atl: self.atl,
-                atlDate: self.atlDate,
                 lastUpdated: self.lastUpdated,
-                sparklineIn7d: self.sparklineIn7d.map { SparklineData(price: $0.price)
-                }
+                sparklineIn7d: self.sparklineIn7d.map { SparklineData(price: $0.price) }
             )
         ]
     }
@@ -65,9 +60,7 @@ extension MarketEntity {
                 low24h: 118835727,
                 priceChangePercentage24h: -0.18651,
                 ath: 157802010,
-                athDate: "2025-01-20T07:16:25.271Z",
                 atl: 75594,
-                atlDate: "2013-07-05T00:00:00.000Z",
                 lastUpdated: "2025-04-18T06:46:27.805Z",
                 sparklineIn7d: SparklineData(price: [
                     0.3990106956257132,
@@ -248,9 +241,7 @@ extension MarketEntity {
                 low24h: 2223400,
                 priceChangePercentage24h: -1.46528,
                 ath: 5870966,
-                athDate: "2024-12-16T18:55:22.127Z",
                 atl: 489.4,
-                atlDate: "2015-10-20T00:00:00.000Z",
                 lastUpdated: "2025-04-18T07:01:43.546Z",
                 sparklineIn7d: nil
             ),
@@ -264,9 +255,7 @@ extension MarketEntity {
                 low24h: 2991.38,
                 priceChangePercentage24h: -1.62985,
                 ath: 4929.59,
-                athDate: "2025-01-16T17:00:22.630Z",
                 atl: 2.75,
-                atlDate: "2014-05-22T00:00:00.000Z",
                 lastUpdated: "2025-04-18T07:01:49.313Z",
                 sparklineIn7d: nil
             )

@@ -46,7 +46,7 @@ extension TrendingViewModel {
 
 // MARK: - Tranform
 extension TrendingViewModel {
-    func transform() {
+    func transform() { // TODO: 10초마다 호출
         input.fetchTrendingData
             .sink { [weak self] _ in
                 Task { await self?.fetchTrendingData() }
