@@ -10,4 +10,5 @@ import RealmSwift
 
 final class FavoriteObject: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: String
+    @Persisted var createdAt: Date = Date()
 }

@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import AlertToast
 import Charts
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
+    @State private var showToast = false
+    @State private var toastMsg = ""
     
     var coinId: String
     
@@ -27,7 +30,20 @@ struct DetailView: View {
             viewModel.action(.getCoinId(coinId))
         }
         .navigationBar { } trailing: {
-            StarButton(coinId: coinId)
+            StarButton(coinId: coinId) { result in
+                switch result {
+                case .added:
+                    toastMsg = "즐겨찾기에 추가되었습니다."
+                case .removed:
+                    toastMsg = "즐겨찾기에서 삭제되었습니다."
+                case .limitReached:
+                    toastMsg = "즐겨찾기는 최대 10개까지 등록 가능합니다."
+                }
+                showToast = true
+            }
+        }
+        .toast(isPresenting: $showToast) {
+            AlertToast(displayMode: .hud, type: .regular, title: toastMsg)
         }
     }
     

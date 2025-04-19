@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct SearchView: View {
     
     @StateObject private var viewModel = SearchViewModel()
+    @State private var showToast = false
+    @State private var toastMsg = ""
     
     var body: some View {
         NavigationWrapper {
@@ -22,6 +25,9 @@ struct SearchView: View {
                 .navigationBar { } trailing: {
                     ProfileImageButton()
                 }
+        }
+        .toast(isPresenting: $showToast) {
+            AlertToast(displayMode: .hud, type: .regular, title: toastMsg)
         }
     }
     
@@ -80,7 +86,17 @@ struct SearchView: View {
             
             Spacer()
             
-            StarButton(coinId: entity.id)
+            StarButton(coinId: entity.id) { result in
+                switch result {
+                case .added:
+                    toastMsg = "즐겨찾기에 추가되었습니다."
+                case .removed:
+                    toastMsg = "즐겨찾기에서 삭제되었습니다."
+                case .limitReached:
+                    toastMsg = "즐겨찾기는 최대 10개까지 등록 가능합니다."
+                }
+                showToast = true
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)

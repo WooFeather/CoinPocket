@@ -68,11 +68,14 @@ extension FavoriteViewModel {
     private func loadFavorites() async {
         output.isLoading = true
 
-        let ids = realmRepo.fetchAll().map(\.id)
+        let ids = realmRepo.fetchAll().sorted(by: { $0.createdAt > $1.createdAt }).map(\.id)
 
         do {
             let result = try await networkRepo.markets(ids: ids)
-            output.favorites = result
+            let sorted = ids.compactMap { id in
+                result.first(where: { $0.id == id })
+            }
+            output.favorites = sorted
         } catch {
             print("❌ network error:", error)
         }

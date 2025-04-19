@@ -13,9 +13,16 @@ struct StarButton: View {
     private var repository = RealmRepository.shared
     let coinId: String
     
-    init(coinId: String) {
-        repository.getFileURL()
+    /// 상황별 토스트 메시지 전달용
+    var onResult: ((StarActionResult) -> Void)? = nil
+    
+    enum StarActionResult {
+        case added, removed, limitReached
+    }
+
+    init(coinId: String, onResult: ((StarActionResult) -> Void)? = nil) {
         self.coinId = coinId
+        self.onResult = onResult
     }
     
     private var isFavorite: Bool {
@@ -36,9 +43,13 @@ struct StarButton: View {
     private func toggleFavorite() {
         if isFavorite {
             repository.delete(by: coinId)
-        } else {
+            onResult?(.removed)
+        } else if favorites.count < 10 {
             let obj = FavoriteObject(value: ["id": coinId])
             repository.save(obj)
+            onResult?(.added)
+        } else {
+            onResult?(.limitReached)
         }
     }
 }
