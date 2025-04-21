@@ -35,6 +35,9 @@ struct FavoriteView: View {
         .onAppear {
             viewModel.action(.fetchFavoriteData)
         }
+        .refreshable {
+            viewModel.action(.fetchFavoriteData)
+        }
     }
     
     // MARK: - Function
