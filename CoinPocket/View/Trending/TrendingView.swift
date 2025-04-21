@@ -10,6 +10,7 @@ import SwiftUI
 struct TrendingView: View {
     
     @StateObject private var viewModel = TrendingViewModel()
+    @Binding var selectedTab: Tab
     
     var body: some View {
         NavigationWrapper {
@@ -48,7 +49,7 @@ struct TrendingView: View {
                 } else {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
-                            ForEach(viewModel.output.favorites, id: \.id) { item in
+                            ForEach(viewModel.output.favorites.prefix(3), id: \.id) { item in
                                 NavigationLink {
                                     LazyView(DetailView(coinId: item.id))
                                 } label: {
@@ -56,12 +57,26 @@ struct TrendingView: View {
                                 }
                                 .buttonStyle(.plain)
                             }
+                            
+                            if viewModel.output.favorites.count > 3 {
+                                moreView()
+                            }
                         }
                         .padding(.horizontal)
                     }
                 }
             }
         }
+    }
+    
+    private func moreView() -> some View {
+        Text("더보기")
+            .frame(width: 220, height: 150)
+            .background(.blue.opacity(0.3))
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .wrapToButton {
+                selectedTab = .favorite
+            }
     }
     
     private func rankingView(title: String, isCoin: Bool) -> some View {

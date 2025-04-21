@@ -14,8 +14,8 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .trending
     
     var body: some View {
-        TabView {
-            TrendingView()
+        TabView(selection: $selectedTab) {
+            TrendingView(selectedTab: $selectedTab)
                 .asTabModifier(.trending)
             
             SearchView()
