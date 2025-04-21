@@ -10,7 +10,22 @@
 		79F479162DB22A8500C14FC1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 79F479152DB22A8500C14FC1 /* Alamofire */; };
 		79F47A572DB39A7F00C14FC1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 79F47A562DB39A7F00C14FC1 /* RealmSwift */; };
 		79F47A672DB3B85900C14FC1 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 79F47A662DB3B85900C14FC1 /* AlertToast */; };
+		79F47A682DB3DAD200C14FC1 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 79F47A562DB39A7F00C14FC1 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		79F47A692DB3DAD200C14FC1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				79F47A682DB3DAD200C14FC1 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		79852B672DB0EF0D00C7A97F /* CoinPocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoinPocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +79,7 @@
 				79852B632DB0EF0D00C7A97F /* Sources */,
 				79852B642DB0EF0D00C7A97F /* Frameworks */,
 				79852B652DB0EF0D00C7A97F /* Resources */,
+				79F47A692DB3DAD200C14FC1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -272,6 +288,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "조우현";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -307,6 +324,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "조우현";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
